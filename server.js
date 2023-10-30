@@ -3,7 +3,7 @@ const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const path = require('path');
 require('dotenv').config();
-const products = require('./routes/products');
+const Shoes = require('./routes/Shoes');
 
 const app = express();
 const port = process.env.PORT;
@@ -17,7 +17,7 @@ async function MongoConnect() {
     const client = await MongoClient.connect(uri);
     db = client.db(dbName);
     console.log('Connected to MongoDB');
-    app.use(products(db));
+    app.use(Shoes(db));
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     process.exit(1);
