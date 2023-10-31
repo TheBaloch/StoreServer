@@ -6,7 +6,7 @@ const path = require('path');
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: './uploads/products',
+  destination: './uploads/shoes',
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const extension = path.extname(file.originalname);
@@ -49,25 +49,13 @@ module.exports = (db) => {
     }
   });
 
-  router.get('/api/shoes/catogery', async (req, res) => {
-    try {
-      const collection = db.collection('shoes_catogery');
-      const data = await collection.find().toArray();
-      res.json(data);
-    } catch (error) {
-      console.error('Error retrieving data from Products:', error);
-      res.status(500).json({ error: 'Failed to retrieve data from Products' });
-    }
-  });
-
   router.post('/api/shoes', upload.single('image'), async (req, res) => {
     try {
       const { category, gender, type, brand, title, description, price, size } =
         req.body;
-
       const image = req.file.path;
 
-      const collection = db.collection(collectionName);
+      const collection = db.collection('shoes');
 
       const product = {
         category,
@@ -83,6 +71,22 @@ module.exports = (db) => {
       //console.log('test');
       await collection.insertOne(product);
       res.status(201).json(product);
+    } catch (error) {
+      console.error('Error adding product:', error);
+      res.status(500).json({ error: 'Failed to add product' });
+    }
+  });
+
+  router.post('/api/shoes_category', async (req, res) => {
+    try {
+      const { category } = req.body;
+      const collection = db.collection('shoes_category');
+      const c = {
+        category,
+      };
+      console.log(c);
+      await collection.insertOne(c);
+      res.status(201).json(c);
     } catch (error) {
       console.error('Error adding product:', error);
       res.status(500).json({ error: 'Failed to add product' });

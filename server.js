@@ -31,7 +31,11 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000', // frontend URI (ReactJS)
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   '/uploads/products',
